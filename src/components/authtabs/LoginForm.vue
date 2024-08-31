@@ -17,9 +17,11 @@ import { useToast } from "@/components/ui/toast/use-toast";
 import { login } from "../../API/auth";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
+import { useTaskStore } from "@/stores/task";
 
 const { toast } = useToast();
 const authStore = useAuthStore();
+const taskData = useTaskStore();
 
 const formSchema = toTypedSchema(
   z.object({
@@ -36,7 +38,7 @@ const onSubmit = handleSubmit(async (values) => {
   const response = await login(values.email, values.password);
   if (response.data.success) {
     localStorage.setItem("authToken", response.data.data);
-    authStore.setToken(response.data.data);
+    taskData.setToken(response.data.data)
     router.push({ name: "Dashboard" });
     toast({
       description: response.data.message,

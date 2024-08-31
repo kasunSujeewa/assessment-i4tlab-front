@@ -7,10 +7,29 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
-export const getTask = async (token: any) => {
+export const getTask = async (token: any,page: number) => {
   try {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    const response = await api.get('/tasks');
+    const response = await api.get('/tasks?page='+page);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+export const createTask = async (token: any,data: {title: string, due_date:string}) => {
+  try {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const response = await api.post('/tasks',data);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export const deleteTask = async (token: any,id : Number) => {
+  try {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const response = await api.delete(`/tasks/${id}`);
     return response;
   } catch (error) {
     return error.response;

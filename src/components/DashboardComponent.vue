@@ -1,33 +1,32 @@
-<template></template>
+<template>
+    <div class="grid grid-cols-1 gap-8 justify-items-center">
+        <TaskAddingHeaderVue @getLatestTask="handleLatestTasks"/>
+        <TaskListComponentVue :taskData="taskStore.tasks"/>
+        <PaginationComponent/>
+    </div>
+</template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { getTask } from "@/API/task";
 import { useToast } from "@/components/ui/toast/use-toast";
 import { useAuthStore } from "@/stores/auth";
-const authStore = useAuthStore();
+import TaskListComponentVue from "./tasks/TaskListComponent.vue";
+import TaskAddingHeaderVue from "./tasks/TaskAddingHeader.vue";
+import PaginationComponent from './pagination/PaginationComponents.vue'
+import { useTaskStore } from "@/stores/task";
 
-const { toast } = useToast();
+const taskStore = useTaskStore();
+const { toast } = useToast(); 
 
-const tasks = ref<any[]>([]); 
-
-// Function to fetch tasks
 const fetchTasks = async () => {
-  const response = await getTask(authStore.token);
-  if (response.data.success) {
-    tasks.value = response.data.data;
-    toast({
-      description: response.data.message,
-    });
-  } else {
-    toast({
-      variant: "destructive",
-      description: response.data.message,
-    });
-  }
+    taskStore.fetchTasks();
 };
 
-// Call fetchTasks when the component is mounted
+const handleLatestTasks = () =>{
+    fetchTasks();
+}
+
 onMounted(() => {
   fetchTasks();
 });

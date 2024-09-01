@@ -1,35 +1,34 @@
-<template>
-    <div class="grid grid-cols-1 gap-8 justify-items-center">
-        <TaskAddingHeaderVue @getLatestTask="handleLatestTasks"/>
-        <TaskListComponentVue :taskData="taskStore.tasks"/>
-        <PaginationComponent/>
-    </div>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { getTask } from "@/API/task";
-import { useToast } from "@/components/ui/toast/use-toast";
-import { useAuthStore } from "@/stores/auth";
+import { onMounted } from "vue";
 import TaskListComponentVue from "./tasks/TaskListComponent.vue";
 import TaskAddingHeaderVue from "./tasks/TaskAddingHeader.vue";
-import PaginationComponent from './pagination/PaginationComponents.vue'
+import PaginationComponent from "./pagination/PaginationComponents.vue";
 import { useTaskStore } from "@/stores/task";
+import { useUserStore } from "@/stores/user";
 
 const taskStore = useTaskStore();
-const { toast } = useToast(); 
+const userData = useUserStore();
 
 const fetchTasks = async () => {
-    taskStore.fetchTasks();
+  taskStore.fetchTasks();
 };
 
-const handleLatestTasks = () =>{
-    fetchTasks();
-}
+const handleLatestTasks = () => {
+  fetchTasks();
+};
 
 onMounted(() => {
   fetchTasks();
+  userData.fetchUser();
 });
 </script>
-
-<style></style>
+<template>
+  <div class="grid grid-cols-1 gap-8 justify-items-center">
+    <TaskAddingHeaderVue v-if="userData.user.role === 'Admin'" @getLatestTask="handleLatestTasks" />
+    <TaskListComponentVue :taskData="taskStore.tasks" />
+    <PaginationComponent v-if="taskStore.total > 0" />
+        <div v-else class="grid text-lg font-extrabold text-white">
+            You have Not Tasks
+        </div>
+  </div>
+</template>

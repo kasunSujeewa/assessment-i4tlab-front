@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Search } from 'lucide-vue-next'
 import { Input } from '@/components/ui/input'
 import { AnOutlinedAppstoreAdd } from '@kalimahapps/vue-icons';
 import { ref,defineEmits } from 'vue'
@@ -9,7 +8,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
@@ -23,15 +21,10 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
 import { vAutoAnimate } from "@formkit/auto-animate/vue";
-import { createTask } from '@/API/task';
-import { useAuthStore } from '@/stores/auth';
-import { useToast } from "@/components/ui/toast/use-toast";
 import { useTaskStore } from '@/stores/task';
-const { toast } = useToast();
 
 const emit = defineEmits(['getLatestTask']);
 
-const authData = useAuthStore()
 const taskData = useTaskStore()
 
 const df = new DateFormatter('en-US', {
@@ -88,7 +81,7 @@ const onSubmit = handleSubmit(async (values) => {
         <FormMessage />
       </FormItem>
     </FormField>
-    <div class="grid grid-cols-2">
+    <div class="grid grid-cols-2 gap-6">
         <div class="grid ">
     <FormField name="due_date">
       <FormItem v-auto-animate>

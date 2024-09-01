@@ -14,7 +14,7 @@
       <Button class="bg-transparent">Contact</Button>
       <Button class="bg-transparent">Blog</Button>
       <Button
-        v-if="token"
+        v-if="authUser.token !== null"
         class="bg-green-600 text-gray-200 hover:text-white rounded-xl"
         @click="userLogout()"
         >Logout</Button
@@ -33,8 +33,6 @@ import Button from "../ui/button/Button.vue";
 const authUser = useAuthStore();
 const { toast } = useToast();
 
-const token = authUser.token;
-
 const userLogout = async () => {
   const response = await logout(authUser.token);
   if (response.data.success) {
@@ -51,5 +49,3 @@ const userLogout = async () => {
   }
 };
 </script>
-
-<style></style>

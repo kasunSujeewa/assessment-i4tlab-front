@@ -7,7 +7,7 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
-export const getTask = async (token: any,page: number) => {
+export const getTask = async (token: any,page: Number) => {
   try {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     const response = await api.get('/tasks?page='+page);

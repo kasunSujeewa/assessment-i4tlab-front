@@ -17,11 +17,11 @@ import { useToast } from "@/components/ui/toast/use-toast";
 import { login } from "../../API/auth";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
-import { useTaskStore } from "@/stores/task";
+import { ref } from "vue"; // 
 
 const { toast } = useToast();
-const authStore = useAuthStore();
-const taskData = useTaskStore();
+const authData = useAuthStore();
+const loading = ref(false); 
 
 const formSchema = toTypedSchema(
   z.object({
@@ -35,10 +35,13 @@ const { handleSubmit } = useForm({
 });
 
 const onSubmit = handleSubmit(async (values) => {
+  loading.value = true; 
   const response = await login(values.email, values.password);
+  loading.value = false; 
+
   if (response.data.success) {
     localStorage.setItem("authToken", response.data.data);
-    taskData.setToken(response.data.data)
+    authData.setToken(response.data.data);
     router.push({ name: "Dashboard" });
     toast({
       description: response.data.message,
@@ -80,6 +83,9 @@ const onSubmit = handleSubmit(async (values) => {
         <FormMessage />
       </FormItem>
     </FormField>
-    <Button type="submit"> Login </Button>
+    <Button type="submit" :disabled="loading">
+      <span v-if="loading">Loading...</span>
+      <span v-else>Login</span>
+    </Button>
   </form>
 </template>

@@ -25,8 +25,10 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast/use-toast";
 import { register } from "../../API/auth";
 import router from "@/router";
+import { useAuthStore } from "@/stores/auth";
 
 const { toast } = useToast();
+const authData = useAuthStore();
 
 const formSchema = toTypedSchema(
   z
@@ -39,11 +41,11 @@ const formSchema = toTypedSchema(
     })
     .refine((data) => data.password === data.confirm_password, {
       message: "Passwords must match",
-      path: ["confirm_password"], // This will show the error under confirm_password field
+      path: ["confirm_password"],
     })
 );
 
-const { handleSubmit, errors } = useForm({
+const { handleSubmit } = useForm({
   validationSchema: formSchema,
 });
 
@@ -57,6 +59,7 @@ const onSubmit = handleSubmit(async (values) => {
   );
   if (response.data.success) {
     localStorage.setItem("authToken", response.data.data);
+    authData.setToken(response.data.data);
     router.push({ name: "Dashboard" });
     toast({
       description: response.data.message,
@@ -139,6 +142,6 @@ const onSubmit = handleSubmit(async (values) => {
         <FormMessage />
       </FormItem>
     </FormField>
-    <Button type="submit"> Login </Button>
+    <Button type="submit"> Register </Button>
   </form>
 </template>

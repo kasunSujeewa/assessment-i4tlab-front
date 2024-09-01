@@ -10,7 +10,7 @@ import Toaster from '@/components/ui/toast/Toaster.vue'
     <div>
       <HeaderComponentVue/>
     </div>
-    <div class="grid grid-cols-1 justify-items-center py-32">
+    <div class="grid grid-cols-1 justify-items-center py-12">
        
         <router-view></router-view>
     </div>
